@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>sprite sheet viewer</title>
+<style>
+body{background:#0d0f14;color:#9aa3ad;font:12px monospace;margin:14px}
+.c{display:inline-block;margin:8px;text-align:center;vertical-align:top}
+canvas{image-rendering:pixelated;background:#171a23;border:1px solid #2c3342;display:inline-block;margin:2px}
+</style></head>
+<body><h3>abyss-rogue sprites</h3><div id="g"></div>
+<script src="js/utils.js"></script>
+<script src="js/sprites.js"></script>
+<script>
+Sprites.init();
+const g = document.getElementById('g');
+for (const name of Sprites.names()) {
+  const d = Sprites.DATA[name], nf = d.frames.length;
+  const c = document.createElement('div'); c.className = 'c';
+  let html = `<div><b>${name}</b> ${d.w}x${d.h} ${nf}f</div>`;
+  for (let f = 0; f < nf; f++) html += `<canvas data-n="${name}" data-f="${f}" width="${d.w * 4}" height="${d.h * 4}"></canvas>`;
+  c.innerHTML = html; g.appendChild(c);
+}
+for (const cv of document.querySelectorAll('canvas[data-n]')) {
+  const ctx = cv.getContext('2d'); ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(Sprites.get(cv.dataset.n, +cv.dataset.f), 0, 0, cv.width, cv.height);
+}
+</script></body></html>
